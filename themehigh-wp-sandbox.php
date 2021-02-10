@@ -90,5 +90,5 @@ add_filter( 'action_scheduler_retention_period', 'wpb_action_scheduler_purge' );
  * Change Action Scheduler default purge to 1 week
  */
 function wpb_action_scheduler_purge() {
- return 1 * HOUR_IN_SECONDS;
+ return 12 * HOUR_IN_SECONDS;
 }

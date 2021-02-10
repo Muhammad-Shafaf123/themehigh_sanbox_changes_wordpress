@@ -134,9 +134,10 @@ class THWPSB_Public {
 		if($is_sandbox) {
 			if(is_user_logged_in()){
 				$html = THWPSB_Utils_Public::render_sandbox_expiry_warning($blogID);
-			}else{
-				$html = THWPSB_Utils_Public::render_new_sandbox_bar();
 			}
+			// }else{
+			// 	$html = THWPSB_Utils_Public::render_new_sandbox_bar();
+			// }
 		}else{
 			if(!is_user_logged_in()){
 				$html = THWPSB_Utils_Public::render_new_sandbox_bar();
@@ -261,10 +262,10 @@ class THWPSB_Public {
 
 		$blogID = get_current_blog_id();
 		$is_sandbox = THWPSB_Utils::is_sandbox($blogID);
-		if($is_sandbox){
-			$classes[] = 'thwp-sandbox';
-		}else{
-			$classes[] = 'thwp-sandbox';
+		if(!$is_sandbox){
+			if(!is_user_logged_in()){
+				$classes[] = 'sandbox-ready';
+			}
 		}
 
 	    return $classes;

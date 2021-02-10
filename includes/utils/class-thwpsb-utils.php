@@ -221,9 +221,9 @@ class THWPSB_Utils {
 
     public static function get_plugin_setting($key){
         if($key == 'sb_lifetime'){
-            return 5;
+            return 30;
         }elseif($key == 'sb_optimize_interval' ){
-            return 2;
+            return 10;
         }
     }
 
