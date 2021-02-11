@@ -52,17 +52,22 @@ class THWPSB_Public {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		// Enque public scripts & styles
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles') );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts') );
 
-		// add ajax call for create demo
+		// Create sandbox ajax call
 		add_action( 'wp_ajax_thwpsb_create_sandbox', array( $this, 'create_new_sandbox' ) );
 		add_action( 'wp_ajax_nopriv_thwpsb_create_sandbox', array( $this, 'create_new_sandbox' ) );
+
+		// Show sand box bar & expiry box
 		add_action( 'wp_footer', array( $this, 'show_sandbox_details' ));
+
+		// Add custom body class
 		add_filter( 'body_class', array( $this, 'custom_body_classes') );
 
+		// Custom menu item in admin toolbar
 		add_action('admin_bar_menu', array( $this, 'new_adminbar_item'), 999);
-
 	}
 
 	/**
@@ -75,17 +80,6 @@ class THWPSB_Public {
 		if(!$sandbox_enabled){
 			return;
 		}
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in THWPSB_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The THWPSB_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/thwpsb-public.css', array(), $this->version, 'all' );
 
@@ -101,17 +95,6 @@ class THWPSB_Public {
 		if(!$sandbox_enabled){
 			return;
 		}
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in THWPSB_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The THWPSB_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/thwpsb-public.js', array( 'jquery' ), $this->version, false );
 
@@ -124,6 +107,9 @@ class THWPSB_Public {
 
 	}
 
+	/**
+	* This function show create sandbox bar and expiry box
+	*/
 	public function show_sandbox_details(){
 		$sandbox_enabled = THWPSB_Utils::is_sandbox_enabled();
 		if(!$sandbox_enabled){
@@ -135,9 +121,6 @@ class THWPSB_Public {
 			if(is_user_logged_in()){
 				$html = THWPSB_Utils_Public::render_sandbox_expiry_warning($blogID);
 			}
-			// }else{
-			// 	$html = THWPSB_Utils_Public::render_new_sandbox_bar();
-			// }
 		}else{
 			if(!is_user_logged_in()){
 				$html = THWPSB_Utils_Public::render_new_sandbox_bar();
@@ -146,6 +129,9 @@ class THWPSB_Public {
 		echo $html;
 	}
 
+	/**
+	* Ajax create sandbox callback function
+	*/
 	public function create_new_sandbox(){
 		$sandbox_enabled = THWPSB_Utils::is_sandbox_enabled();
 		if(!$sandbox_enabled){
@@ -210,7 +196,7 @@ class THWPSB_Public {
 		$sandboxName                = wp_generate_uuid4();
 		$blogDetails                = get_blog_details( $blogID );
 
-		// Set YITH Cloner variables
+		// Set Cloner variables
 		$host                       = DB_HOST;
 		$db                         = DB_NAME;
 		$usr                        = DB_USER;
@@ -254,6 +240,9 @@ class THWPSB_Public {
 		return $response;
 	}
 
+	/**
+	* This function will add custom body class
+	*/
 	function custom_body_classes( $classes ) {
 		$sandbox_enabled = THWPSB_Utils::is_sandbox_enabled();
 		if(!$sandbox_enabled){
@@ -269,10 +258,11 @@ class THWPSB_Public {
 		}
 
 	    return $classes;
-
 	}
 
-	// update toolbar
+	/**
+	* This function will add custom item in admin bar
+	*/
 	public function new_adminbar_item($wp_adminbar) {
 		if(!is_admin()){
 	  $wp_adminbar->add_node([

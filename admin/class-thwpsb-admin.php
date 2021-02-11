@@ -52,40 +52,46 @@ class THWPSB_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		// Enqueue scripts & styles in admin end
 		add_action( 'admin_enqueue_scripts', array($this, 'enqueue_styles') );
 		add_action( 'admin_enqueue_scripts', array($this, 'enqueue_scripts') );
 
-
+		// Custom network menu
 		add_action('network_admin_menu', array($this, 'network_menu'));
 
-		// Hook to columns on network sites listing
-		add_filter( 'wpmu_blogs_columns', array($this, 'mfs_blogs_columns') );
+		// // Hook to columns on network sites listing
+		// add_filter( 'wpmu_blogs_columns', array($this, 'mfs_blogs_columns') );
+		//
+		// // Hook to manage column data on network sites listing
+		// add_action( 'manage_sites_custom_column', array($this, 'mfs_sites_custom_column'), 10, 2 );
 
-		// Hook to manage column data on network sites listing
-		add_action( 'manage_sites_custom_column', array($this, 'mfs_sites_custom_column'), 10, 2 );
+		// Initalize scheduling
+		add_action( 'init', array($this, 'schedule_sandbox_cleaning') );
 
-		add_action( 'init', array($this, 'clean_sandbox_cron') );
-		add_action('thwpsb_clean_sandbox_scheduler', array($this, 'prepare_cleaning_schedules') );
+		// Prepare sandbox cleaning schedules
+		add_action('thwpsb_clean_sandbox_schedule', array($this, 'prepare_cleaning_schedules') );
+
+		// Performing thwpsb_delete_sandbox actions
 		add_action('thwpsb_delete_sandbox', array($this, 'scheduled_sandbox_delete_action') );
 
-		add_action( 'admin_footer', array( $this, 'show_sandbox_details' ));
+		// Show sandbox expiry box
+		add_action( 'admin_footer', array( $this, 'show_sandbox_exiry_box' ));
 
+		// Admin menu on subsite
 		add_action('admin_menu', array( $this, 'subsite_sandbox_menu' ));
+
+		// Initialize sandbox settings
 		add_action('admin_init', array( $this, 'sandbox_settings_init'));
-		// admin_bar_menu hook
+
+		// new menu item in admin bar
 		add_action('admin_bar_menu', array( $this, 'new_adminbar_item'), 999);
 	}
 
-	// public function your_function(){
-	// 	add_settings_field(
-	// 	    'Checkbox Element',
-	// 	    'Checkbox Element',
-	// 	    array($this, 'sandbox_checkbox_element_callback'),
-	// 	    'sandbox_theme_input_examples',
-	// 	    'input_examples_section'
-	// 	);
-	// }
-
+	/**
+	* Initialize settings API
+	*
+	* @since 1.0.0
+	*/
 	function sandbox_settings_init(  ) {
 	    register_setting( 'sb_settings', 'sandbox_settings' );
 	    add_settings_section(
@@ -112,6 +118,9 @@ class THWPSB_Admin {
 	    );
 	}
 
+	/**
+	* Render text field in settings API
+	*/
 	function render_text_field() {
 	    $options = get_option( 'sandbox_settings' );
 		$url = isset($options['redirect_url']) ? $options['redirect_url'] : '';
@@ -122,6 +131,9 @@ class THWPSB_Admin {
 	    <?php
 	}
 
+	/**
+	* Render checkbox field in settings API
+	*/
 	function render_checkbox_field() {
 	    $options = get_option( 'sandbox_settings' );
 		$enabled = isset($options['enabled']) ? $options['enabled'] : false; ?>
@@ -130,10 +142,16 @@ class THWPSB_Admin {
 	    <?php
 	}
 
+	/**
+	* Custom section in settings API
+	*/
 	function stp_api_settings_section_callback(  ) {
 	    echo __( 'This settings are each site specific.', 'wordpress' );
 	}
 
+	/**
+	* Render settings page using Settings API
+	*/
 	function stp_api_options_page(){
 	    ?>
 		<div class="wrap">
@@ -156,18 +174,6 @@ class THWPSB_Admin {
 	 */
 	public function enqueue_styles() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in THWPSB_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The THWPSB_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/thwpsb-admin.css', array(), $this->version, 'all' );
 
 	}
@@ -179,23 +185,13 @@ class THWPSB_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in THWPSB_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The THWPSB_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/thwpsb-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
 
-
+	/**
+	* This function will create network menu & sub menu for sandbox
+	*/
 	public function network_menu() {
 		$manage_sandbox = new THWPSB_Sandbox_Manage;
 	    add_menu_page(
@@ -224,7 +220,7 @@ class THWPSB_Admin {
 	}
 
 	/**
-	 * Adds a new top-level page to the administration menu.
+	 * Adds top-level page to the administration menu in subsite.
 	 */
 	public function subsite_sandbox_menu() {
 	     add_menu_page(
@@ -245,8 +241,6 @@ class THWPSB_Admin {
 		   array($this, 'stp_api_options_page'),
 		   5
 	   );
-	   //call register settings function
-	//add_action( 'admin_init', array($this, 'register_my_cool_plugin_settings') );
 	}
 
 	public function thwpsb_sandbox_callback(){
@@ -256,49 +250,6 @@ class THWPSB_Admin {
 		</div>
 		<?php
 	}
-
-	function register_my_cool_plugin_settings() {
-		//register our settings
-		register_setting( 'my-cool-plugin-settings-group', 'new_option_name' );
-		register_setting( 'my-cool-plugin-settings-group', 'some_other_option' );
-		register_setting( 'my-cool-plugin-settings-group', 'option_etc' );
-	}
-
-	public function thwpsb_sandbox_setting_callback(){
-		?>
-		<div class="wrap">
-			<h1>Sandbox Setting</h1>
-
-
-			<form method="post" action="options.php">
-			    <?php settings_fields( 'my-cool-plugin-settings-group' ); ?>
-			    <?php do_settings_sections( 'my-cool-plugin-settings-group' ); ?>
-			    <table class="form-table">
-			        <tr valign="top">
-			        <th scope="row">New Option Name</th>
-			        <td><input type="text" name="new_option_name" value="<?php echo esc_attr( get_option('new_option_name') ); ?>" /></td>
-			        </tr>
-
-			        <tr valign="top">
-			        <th scope="row">Some Other Option</th>
-			        <td><input type="text" name="some_other_option" value="<?php echo esc_attr( get_option('some_other_option') ); ?>" /></td>
-			        </tr>
-
-			        <tr valign="top">
-			        <th scope="row">Options, Etc.</th>
-			        <td><input type="text" name="option_etc" value="<?php echo esc_attr( get_option('option_etc') ); ?>" /></td>
-			        </tr>
-			    </table>
-
-			    <?php submit_button(); ?>
-
-			</form>
-
-		</div>
-		<?php
-	}
-
-
 
 	public function network_menu_callback(){
 		?>
@@ -353,18 +304,25 @@ class THWPSB_Admin {
 		}
 	}
 
-	public function clean_sandbox_cron(){
+	/**
+	* This function will iniate scheduling &
+	* create thwpsb_clean_sandbox_schedule as per interval settings
+	*/
+	public function schedule_sandbox_cleaning(){
 		$site_id = get_current_blog_id();
 		$is_sandbox = THWPSB_Utils::is_sandbox($site_id);
 		if($is_sandbox){
 			return;
 		}
 		$optimize_interval = THWPSB_Utils::get_plugin_setting('sb_optimize_interval');
-		if ( false === as_next_scheduled_action( 'thwpsb_clean_sandbox_scheduler' ) ) {
-			as_schedule_recurring_action( strtotime( 'today' ), $optimize_interval * MINUTE_IN_SECONDS, 'thwpsb_clean_sandbox_scheduler' );
+		if ( false === as_next_scheduled_action( 'thwpsb_clean_sandbox_schedule' ) ) {
+			as_schedule_recurring_action( strtotime( 'today' ), $optimize_interval * MINUTE_IN_SECONDS, 'thwpsb_clean_sandbox_schedule' );
 		}
 	}
 
+	/**
+	* This function will prepare cleaning schedules
+	*/
 	public function prepare_cleaning_schedules(){
 		$e_sandboxes = THWPSB_Utils::get_expired_sandboxes();
 		if(!empty($e_sandboxes) && is_array($e_sandboxes)){
@@ -377,6 +335,9 @@ class THWPSB_Admin {
 		}
 	}
 
+	/**
+	* This function will schedule sandbox delete action
+	*/
 	public function scheduled_sandbox_delete_action($site_id){
 
 		$blogDetails = get_blog_details( $site_id );
@@ -401,7 +362,10 @@ class THWPSB_Admin {
 
 	}
 
-	public function show_sandbox_details(){
+	/**
+	* Show sandbox expiry content
+	*/
+	public function show_sandbox_exiry_box(){
 		$html = '';
 		$blogID = get_current_blog_id();
 		$is_sandbox = THWPSB_Utils::is_sandbox($blogID);
@@ -413,7 +377,9 @@ class THWPSB_Admin {
 		echo $html;
 	}
 
-	// update toolbar
+	/**
+	* This function add custom menu item in admin toolbar
+	*/
 	public function new_adminbar_item($wp_adminbar) {
 		if(is_admin()){
 		  $wp_adminbar->add_node([

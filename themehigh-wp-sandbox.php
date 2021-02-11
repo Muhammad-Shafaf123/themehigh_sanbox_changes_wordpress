@@ -85,10 +85,11 @@ function run_THWPSB() {
 }
 run_THWPSB();
 
-add_filter( 'action_scheduler_retention_period', 'wpb_action_scheduler_purge' );
 /**
- * Change Action Scheduler default purge to 1 week
+ * Change Action Scheduler default purge to 12 hour
+ * to avoid unnessory log & old actions in Action Scheduler tables
  */
+add_filter( 'action_scheduler_retention_period', 'wpb_action_scheduler_purge' );
 function wpb_action_scheduler_purge() {
  return 12 * HOUR_IN_SECONDS;
 }

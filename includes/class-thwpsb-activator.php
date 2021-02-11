@@ -23,16 +23,21 @@
 class THWPSB_Activator {
 
 	/**
-	 * Short Description. (use period)
+	 * Activate function
 	 *
-	 * Long Description.
-	 *
+	 * @return None
 	 * @since    1.0.0
 	 */
 	public static function activate() {
 		self::create_db_sandbox_data();
 	}
 
+	/**
+	* Create custom table to save sandbox data
+	*
+	* @return None
+	* @since 1.0.0
+	*/
 	public static function create_db_sandbox_data() {
 			global $wpdb;
 			$charset_collate = $wpdb->get_charset_collate();

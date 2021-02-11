@@ -28,6 +28,12 @@
  */
 class THWPSB_Utils {
 
+    /**
+    * Get expired sandbox ids
+    *
+    * @return Array $exp_sandboxes sandboxes objects
+    * @since 1.0.0
+    */
     public static function get_expired_sandboxes(){
 
         $sandbox_db = new THWPSB_Db_Helper('th_sandbox', 'multisite_main');
@@ -54,6 +60,13 @@ class THWPSB_Utils {
 		return $exp_sandboxes;
     }
 
+    /**
+    * Remove site upload directory
+    *
+    * @param Integer $site_id
+    * @return Boolean
+    * @since 1.0.0
+    */
     public static function remove_sb_upload_dir($site_id){
         $wp_upload_dir = wp_get_upload_dir();
 		$sb_upload_dir = $wp_upload_dir['basedir'] . "/sites/" .$site_id;
@@ -61,8 +74,16 @@ class THWPSB_Utils {
         return true;
     }
 
+    /**
+    * get current server time in standard format
+    *
+    * @param string $format date format
+    * @return string $now
+    * @since 1.0.0
+    */
     public static function get_current_time($format = 'mysql'){
-        return current_time($format, true);
+        $now = current_time($format, true);
+        return $now;
     }
 
     // public static function datetime_add_minutes($datetime_string, $minutes){
@@ -71,12 +92,26 @@ class THWPSB_Utils {
     //     return $new_date_time;
     // }
 
+    /**
+    * Calculate site expiry
+    *
+    * @param Integer $sb_id Sandbox ID
+    * @return String $expiry_time Time in mysql time format
+    * @since 1.0.0
+    */
     public static function calculate_sandbox_expiry($sb_id){
         $sb_lifetime = THWPSB_Utils::get_plugin_setting('sb_lifetime');
-        return date('Y-m-d H:i:s', strtotime( current_time('mysql', true) ) +  $sb_lifetime * MINUTE_IN_SECONDS );
+        $expiry_time = date('Y-m-d H:i:s', strtotime( current_time('mysql', true) ) +  $sb_lifetime * MINUTE_IN_SECONDS );
+        return $expiry_time;
     }
 
-
+    /**
+    * Find site table names
+    *
+    * @param Integer $site_id
+    * @return Array $tables table names as an array
+    * @since 1.0.0
+    */
     public static function get_site_tables($site_id){
         global $wpdb;
     	$prefix = $wpdb->get_blog_prefix( $site_id );
@@ -85,6 +120,13 @@ class THWPSB_Utils {
         return $tables;
     }
 
+    /**
+    * Delete site tables
+    *
+    * @param Array $tables Table names in an array
+    * @return Boolean
+    * @since 1.0.0
+    */
     public static function drop_site_tables($tables){
         global $wpdb;
         foreach($tables as $table){
@@ -93,8 +135,12 @@ class THWPSB_Utils {
         return true;
     }
 
-    /*
-     * php delete function that deals with directories recursively
+    /**
+     * Delete directories & files recursively
+     *
+     * @param String $target The directory path that to be removed
+     * @return Boolean
+     * @since 1.0.0
      */
     protected static function delete_files($target) {
         $status = false;
@@ -122,7 +168,6 @@ class THWPSB_Utils {
      *
      * @since 1.0.0
      * @param int|string $sandbox_id
-     * @author Francesco Licandro
      */
     public static function delete_users( $sandbox_id ) {
         // get users
@@ -150,41 +195,43 @@ class THWPSB_Utils {
         }
     }
 
+    /**
+    * Delete the blog
+    *
+    * @param Integer $site_id
+    * @since 1.0.0
+    */
     public static function delete_site($site_id){
         if( ! function_exists( 'wpmu_delete_blog' ) ) {
 			require_once( ABSPATH . 'wp-admin/includes/ms.php' );
 		}
 
-        //self::empty_action_scheduler_tables($site_id);
-
-		// delete the blog
 		wpmu_delete_blog( $site_id, true );
     }
 
-    // private static function empty_action_scheduler_tables($site_id){
-    //     global $wpdb;
-    //     $prefix = $wpdb->get_blog_prefix( $site_id );
-    //     $tables = array(
-    //         'actionscheduler_actions',
-    //         'actionscheduler_claims',
-    //         'actionscheduler_groups',
-    //         'actionscheduler_logs'
-    //     );
-    //     foreach($tables as $table){
-    //         $table  = $prefix . $table;
-    //         $delete = $wpdb->query("TRUNCATE TABLE $table");
-    //     }
-    // }
-
+    /**
+    * Check if site is a sandbox
+    *
+    * @param Integer $site_id
+    * @return Integer $source Sandbox source ID
+    * @since 1.0.0
+    */
     public static function is_sandbox($site_id){
         $sandbox_db = new THWPSB_Db_Helper('th_sandbox', 'multisite_main');
         $sandbox  = $sandbox_db->get_row( $column = 'sandbox_id', $value = $site_id, $format = '%d', $output_type = OBJECT, $offset = 0 );
         if(!empty($sandbox) && $sandbox->source_id){
-            return $sandbox->source_id;
+            $source = $sandbox->source_id;
+            return $source;
         }
         return false;
     }
 
+    /**
+    * Check if sandbox is enabled
+    *
+    * @return Boolean
+    * @since 1.0.0
+    */
     public static function is_sandbox_enabled(){
         $options = get_option( 'sandbox_settings' );
         $enabled = isset($options['enabled']) ? $options['enabled'] : false;
@@ -194,12 +241,13 @@ class THWPSB_Utils {
         return false;
     }
 
-    // public static function get_site_setting($key){
-    //     $options = get_option( 'sandbox_settings' );
-    //     $value = isset($options[$key]) ? $options[$key] : '';
-    //     return $value;
-    // }
-
+    /**
+    * Get site expiry time
+    *
+    * @param Integer $site_id
+    * @return String
+    * @since 1.0.0
+    */
     public static function get_site_expiry($site_id){
         $sandbox_db = new THWPSB_Db_Helper('th_sandbox', 'multisite_main');
         $sandbox  = $sandbox_db->get_row( $column = 'sandbox_id', $value = $site_id, $format = '%d', $output_type = OBJECT, $offset = 0 );
@@ -209,16 +257,28 @@ class THWPSB_Utils {
         return false;
     }
 
+    /**
+    * Get differnec between 2 date time strings
+    *
+    * @param String
+    * @param String
+    * @return Integer $diff Difference in seconds
+    * @since 1.0.0
+    */
     public static function get_time_diff($dt_1, $dt_2){
         $date1 = new DateTime($dt_1);
         $date2 = new DateTime($dt_2);
         $diff = $date2->getTimestamp() - $date1->getTimestamp();
-        // if($diff->invert == 1 ){
-        //     return '0';
-        // }
         return $diff;
     }
 
+    /**
+    * Get plugin setting
+    *
+    * @param String
+    * @return String,Integer,Array
+    * @since 1.0.0
+    */
     public static function get_plugin_setting($key){
         if($key == 'sb_lifetime'){
             return 30;
@@ -228,10 +288,9 @@ class THWPSB_Utils {
     }
 
     /**
-     *
      * Group sub-arrays ( of multidimensional array ) by certain key
-     * @return array
      *
+     * @return array
      */
     public static function array_multi_group_by_key($input_array, $key, $remove_key = false, $flatten_output = false)
     {
@@ -252,6 +311,12 @@ class THWPSB_Utils {
         return $output_array;
     }
 
+    /**
+    * Prepare a color array
+    *
+    * @return Array
+    * @since 1.0.0
+    */
     public static function colors_array(){
         return array('#FF6633','#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
         				  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',

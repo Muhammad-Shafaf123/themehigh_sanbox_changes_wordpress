@@ -205,9 +205,6 @@ class THWPSB_Cloner {
 						}
 					//}
 
-					// Add sandbox to the global list
-					//THWPSB_Utils::add_sandbox_to_list( $target_id, $source_id );
-
 					$expired = THWPSB_Utils::calculate_sandbox_expiry($source_id);
 
 					$db_helper = new THWPSB_Db_Helper('th_sandbox', 'multisite_main');
@@ -250,6 +247,13 @@ class THWPSB_Cloner {
 				}
 			}
 
+			/*
+			* Empty action scheduler tables
+			*
+			* @param int $site_id site_id
+			* @return None
+			* @since 1.0.0
+			*/
 			private function empty_action_scheduler_tables($site_id){
 		        global $wpdb;
 		        $prefix = $wpdb->get_blog_prefix( $site_id );

@@ -32,13 +32,13 @@ class THWPSB_Sandbox_Log
 
     public function __construct($plugin_name, $version)
     {
+        // Custom admin menu
         add_action('network_admin_menu', array($this, 'network_menu'));
-        //add_filter('set-screen-option', [ __CLASS__, 'set_screen' ], 10, 3);
-        //add_action('admin_menu', array($this, 'sub_menu_invalid_domains' ));
-        //add_action('admin_notices', array($this, 'admin_notices'));
-        // Render Dropdown filter
-        //add_action('restrict_manage_posts', array($this,'render_expiry_month_dropdown'));
+
+        // Ajax filtering
         add_action( 'wp_ajax_filter_sandbox_log', array( $this, 'filter_sandbox_log' ) );
+
+        // Add style & script
         add_action( 'admin_enqueue_scripts', array($this, 'enqueue_styles') );
 		add_action( 'admin_enqueue_scripts', array($this, 'enqueue_scripts') );
 
@@ -54,17 +54,6 @@ class THWPSB_Sandbox_Log
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in THWPSB_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The THWPSB_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
 
 		wp_enqueue_script( 'thwpsb-chartjs', THWPSB_URL . 'admin/js/Chart.bundle.min.js', array( 'jquery' ), $this->version, false );
 
@@ -77,37 +66,12 @@ class THWPSB_Sandbox_Log
 	 */
 	public function enqueue_styles() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in THWPSB_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The THWPSB_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_style( 'thwpsb-chartjs', THWPSB_URL . 'admin/css/Chart.css', array(), $this->version, 'all' );
 
 	}
 
-    public static function set_screen($status, $option, $value)
-    {
-        return $value;
-    }
-
     public function network_menu()
     {
-        // $hook = add_submenu_page(
-        //     'edit.php?post_type=license',
-        //     __('License Manager', 'themehigh-license-manager'),
-        //     __('Invalid Use', 'themehigh-license-manager'),
-        //     'manage_options',
-        //     'thlm-invalid-use',
-        //     array($this, 'list_table_page')
-        // );
 
         $hook = add_submenu_page(
             'th-sandbox',
@@ -118,23 +82,23 @@ class THWPSB_Sandbox_Log
             array($this, 'list_table_page')
         );
 
-        add_action("load-$hook", [ $this, 'screen_option' ]);
+        //add_action("load-$hook", [ $this, 'screen_option' ]);
     }
 
     /**
     * Screen options
     */
-    public function screen_option()
-    {
-        $option = 'per_page';
-        $args   = [
-            'label'   => 'Sandboxes',
-            'default' => 20,
-            'option'  => 'sandbox_per_page'
-        ];
-        add_screen_option($option, $args);
-        //$sandbox_log_table_obj = new Sandbox_Log_List_Table();
-    }
+    // public function screen_option()
+    // {
+    //     $option = 'per_page';
+    //     $args   = [
+    //         'label'   => 'Sandboxes',
+    //         'default' => 20,
+    //         'option'  => 'sandbox_per_page'
+    //     ];
+    //     add_screen_option($option, $args);
+    //     //$sandbox_log_table_obj = new Sandbox_Log_List_Table();
+    // }
 
     /**
      * Display the page
@@ -183,18 +147,9 @@ class THWPSB_Sandbox_Log
         $sandbox_db = new THWPSB_Db_Helper('th_sandbox', 'multisite_main');
         $items = $sandbox_db->get_wheres(
             $column      = $column,
-            $conditions  = array(
-                                // 'source_id' => '',
-                                // 'expired_at'     => self::get_current_time()
-                            ),
-            $operator    = array(
-                                // 'source_id' => 'NOT NULL',
-                                // 'expired_at' => '<',
-                            ),
-            $format      = array(
-                                // 'source_id' => '%d',
-                                // 'expired_at' => '%s',
-                            ),
+            $conditions  = array(),
+            $operator    = array(),
+            $format      = array(),
             $orderby     = 'id',
             $order       = 'ASC',
             $output_type = OBJECT_K
@@ -257,8 +212,6 @@ class THWPSB_Sandbox_Log
             $month_start = $month->format('Y-m-d');
             $month_end = $month->format('Y-m-t');
         }
-
-
 
         global $wpdb;
         $prefix  = $wpdb->base_prefix;

@@ -76,15 +76,15 @@ class THWPSB {
 
 		$this->load_dependencies();
 		$this->set_locale();
-		$this->define_admin_hooks();
-		//$this->define_public_hooks();
 
-		//if(is_admin()  or wp_doing_ajax() ){
-			$plugin_admin = new THWPSB_Admin( $this->get_plugin_name(), $this->get_version() );
-			$sandbox_log = new THWPSB_Sandbox_Log( $this->get_plugin_name(), $this->get_version() );
-		//}else{
-			$public = new THWPSB_Public($this->get_plugin_name(), $this->get_version());
-		//}
+		// Initiate admin object
+		new THWPSB_Admin( $this->get_plugin_name(), $this->get_version() );
+
+		// Initiate sandbox status object
+		new THWPSB_Sandbox_Log( $this->get_plugin_name(), $this->get_version() );
+
+		// Initiate sandbox status object
+		new THWPSB_Public($this->get_plugin_name(), $this->get_version());
 
 	}
 
@@ -93,24 +93,14 @@ class THWPSB {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - THWPSB_Loader. Orchestrates the hooks of the plugin.
 	 * - THWPSB_i18n. Defines internationalization functionality.
-	 * - THWPSB_Admin. Defines all hooks for the admin area.
-	 * - THWPSB_Public. Defines all hooks for the public side of the site.
+	 * - THWPSB_Autoloader. Orchestrates the hooks of the plugin.
 	 *
-	 * Create an instance of the loader which will be used to register the hooks
-	 * with WordPress.
 	 *
 	 * @since    1.0.0
 	 * @access   private
 	 */
 	private function load_dependencies() {
-
-		/**
-		 * The class responsible for orchestrating the actions and filters of the
-		 * core plugin.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-thwpsb-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
@@ -119,32 +109,16 @@ class THWPSB {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-thwpsb-i18n.php';
 
 		/**
-		 * The class responsible for defining all actions that occur in the admin area.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-thwpsb-admin.php';
-
-		/**
 		 * Action scheduler
 		 */
 		require_once ( plugin_dir_path( dirname( __FILE__ ) ) . 'includes/libraries/action-scheduler/action-scheduler.php' );
 
 		/**
-		 * The class responsible for defining all actions that occur in the public-facing
-		 * side of the site.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-thwpsb-public.php';
-
-		$this->loader = new THWPSB_Loader();
-
-		/**
-		 * The class responsible for including class files by calling class
-		 * side of the site.
+		 * The class responsible for including class files by calling Object
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-thwpsb-autoloader.php';
 
 		$this->autoloader = new THWPSB_Autoloader();
-
-
 
 	}
 
@@ -160,34 +134,7 @@ class THWPSB {
 	private function set_locale() {
 
 		$plugin_i18n = new THWPSB_i18n();
-
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
-	}
-
-	/**
-	 * Register all of the hooks related to the admin area functionality
-	 * of the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function define_admin_hooks() {
-
-		// $plugin_admin = new THWPSB_Admin( $this->get_plugin_name(), $this->get_version() );
-		//
-		// $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		// $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-
-	}
-
-	/**
-	 * Run the loader to execute all of the hooks with WordPress.
-	 *
-	 * @since    1.0.0
-	 */
-	public function run() {
-		$this->loader->run();
+		add_action( 'plugins_loaded', array($plugin_i18n, 'load_plugin_textdomain') );
 	}
 
 	/**
@@ -199,16 +146,6 @@ class THWPSB {
 	 */
 	public function get_plugin_name() {
 		return $this->plugin_name;
-	}
-
-	/**
-	 * The reference to the class that orchestrates the hooks with the plugin.
-	 *
-	 * @since     1.0.0
-	 * @return    THWPSB_Loader    Orchestrates the hooks of the plugin.
-	 */
-	public function get_loader() {
-		return $this->loader;
 	}
 
 	/**

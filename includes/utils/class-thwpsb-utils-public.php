@@ -31,6 +31,12 @@ class THWPSB_Utils_Public
     const SB_MKEY_EXPIRED = 'th_expired';
     const SB_MKEY_PARENT = 'th_parent';
 
+    /**
+    * Render new sandbox bar
+    *
+    * @return HTML
+    * @since 1.0.0
+    */
     public static function render_new_sandbox_bar()
     {
         ob_start(); ?>
@@ -71,6 +77,12 @@ class THWPSB_Utils_Public
         return $html;
     }
 
+    /**
+    * Render sandbox expiry warning HTML 
+    *
+    * @return HTML
+    * @since 1.0.0
+    */
     public static function render_sandbox_expiry_warning($id){
         $expired  = THWPSB_Utils::get_site_expiry($id);
         $now = THWPSB_Utils::get_current_time();
