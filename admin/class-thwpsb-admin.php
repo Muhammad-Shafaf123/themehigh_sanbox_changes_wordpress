@@ -369,7 +369,7 @@ class THWPSB_Admin {
 		$html = '';
 		$blogID = get_current_blog_id();
 		$is_sandbox = THWPSB_Utils::is_sandbox($blogID);
-		if($is_sandbox) {
+		if($is_sandbox) {  // CR_COMMENT: could have used conditional operator instead of nested if
 			if(is_user_logged_in()){
 				$html = THWPSB_Utils_Public::render_sandbox_expiry_warning($blogID);
 			}

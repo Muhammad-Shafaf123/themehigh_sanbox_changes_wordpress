@@ -55,7 +55,7 @@ class THWPSB_Utils_Public
         </div>
 
         <!-- The Modal -->
-        <div id="th-wpsb-modal" class="modal">
+        <div id="th-wpsb-modal" class="modal"> <!-- CR_COMMENT: Namespacing of css classnames -->
 
           <!-- Modal content -->
           <div class="modal-content">
@@ -78,7 +78,7 @@ class THWPSB_Utils_Public
     }
 
     /**
-    * Render sandbox expiry warning HTML 
+    * Render sandbox expiry warning HTML
     *
     * @return HTML
     * @since 1.0.0

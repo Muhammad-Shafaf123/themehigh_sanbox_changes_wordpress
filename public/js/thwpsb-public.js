@@ -15,22 +15,20 @@
 	            data: {
 	               	action : 'thwpsb_create_sandbox',
 	                context: 'frontend',
-					_wpnonce: thwpsb_args.nonce,
+									_wpnonce: thwpsb_args.nonce,
 	            },
 	            success: function( resp ){
-					$(modal).find('.preparing').fadeOut();
-					$(modal).find('.ready').fadeIn();
-	                // on success redirect to admin sandbox
-	                if( resp ){
-						//set_document_cookie(resp);
-
-	                    window.top.location.href = resp;
-	                    return;
-	                }
-
+								$(modal).find('.preparing').fadeOut();
+								$(modal).find('.ready').fadeIn();
+                // on success redirect to admin sandbox
+                if( resp ){
+									//set_document_cookie(resp);
+                  window.top.location.href = resp;
+                  return;
+            		}
 	            },
 	            error: function(){
-					$(modal).fadeOut();
+								$(modal).fadeOut();
 	            }
 	        })
 
