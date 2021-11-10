@@ -18,6 +18,10 @@
 
 		var form_data = jQuery( this ).serializeArray();
 
+		if(!form_data){
+			return;
+		}
+
     	$.ajax({
            type: "POST",
            url: ajaxurl,
@@ -65,7 +69,7 @@
 	$( window ).load(function() {
 
 		// $(document).ready(function(){
-		     $("#thwpsb-filter-form").submit();
+		     //$("#thwpsb-filter-form").submit();
 		// });
 
 		if(document.getElementById('thwpsb-countdown') != null){

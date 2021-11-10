@@ -80,7 +80,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-thwpsb.php';
  */
 function run_THWPSB() {
 	$plugin = new THWPSB();
-	$plugin->run();
+	//$plugin->run();
 
 }
 run_THWPSB();

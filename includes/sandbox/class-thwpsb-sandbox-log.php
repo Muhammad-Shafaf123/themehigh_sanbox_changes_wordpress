@@ -40,7 +40,7 @@ class THWPSB_Sandbox_Log
 
         // Add style & script
         add_action( 'admin_enqueue_scripts', array($this, 'enqueue_styles') );
-		add_action( 'admin_enqueue_scripts', array($this, 'enqueue_scripts') );
+		// add_action( 'admin_enqueue_scripts', array($this, 'enqueue_scripts') );
 
     }
     public function init()
