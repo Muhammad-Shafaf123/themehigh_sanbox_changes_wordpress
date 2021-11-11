@@ -90,7 +90,7 @@ class THWPSB_Admin {
 		add_action( 'admin_head',  array( $this, 'addmin_header_call_back') );
 
 		//personal edite - shafaf - add admin footer hook
-		add_action( 'admin_footer',  array( $this, 'call_ball_forter_test') );
+		add_action( 'admin_footer',  array( $this, 'call_back_footer_test') );
 
 		//personal edite - shafaf - add frontend footer hook
 		add_action( 'wp_footer' , array($this, 'call_back_frontend_footer'));
@@ -108,21 +108,27 @@ class THWPSB_Admin {
 	//personal edite - shafaf - add admin header callback.
 	function addmin_header_call_back()
 	{
-		echo "tesitng admin header hook";
+		$admin_head_text = get_option('admin_front_text');
+		$this->write_log($admin_head_text);
+		echo $admin_head_text;
+
 	}
 	//personal edite - shafaf - add frontend header callback.
 	function frontend_header_call_back(){
-		echo "tesitng frontend header hook";
+		$front_header_text = get_option('front_header_text');
+		$this->write_log($front_header_text);
+		echo $front_header_text;
 	}
 	//personal edite - shafaf - admin footer call back.
-	function call_ball_forter_test(){
-	  $text = "<link src='img/Hello.png'>";
-		echo $text;
+	function call_back_footer_test(){
+	  $admin_footer_text = get_option('admin_footer_text');
+		echo $admin_footer_text;
 	}
 
 	//personal edite - shafaf - frontend footer call back.
 	function call_back_frontend_footer(){
-		echo "testing";
+		$front_footer_text = get_option('front_footer_text');
+		echo $front_footer_text;
 	}
  //personal edite - shafaf - callback CodeMirror script.
  function codemirror_enqueue_scripts($hook) {
@@ -140,6 +146,11 @@ class THWPSB_Admin {
 	*/
 	function sandbox_settings_init(  ) {
 	    register_setting( 'sb_settings', 'sandbox_settings' );
+			register_setting( 'sb_settings', 'admin_header_text' );
+			register_setting( 'sb_settings', 'admin_footer_text' );
+			register_setting( 'sb_settings', 'front_header_text' );
+			register_setting( 'sb_settings', 'front_footer_text' );
+
 	    add_settings_section(
 	        'sandbox_settings_section',
 	        __( 'General Settings', 'wordpress' ),
@@ -188,16 +199,19 @@ class THWPSB_Admin {
 
 	//personal edite -  shafaf - display code field.
 	function render_code_area(){
-		$val = '123';
+
+		$admin_header_text = get_option('admin_header_text');
+		$admin_footer_text = get_option('admin_footer_text');
+		$front_header_text = get_option('front_header_text');
+		$front_footer_text = get_option('front_footer_text');
 		echo __('<label>Admin Header Text</label>', 'wordpress');
-		echo '<br><textarea id="fancy_textarea_admin_header">' . esc_textarea($val) . '</textarea><br>';
-		echo __('<label>Admin Footer Text</label>', 'wordpress');$this->write_log("hello:");
-		echo '<br><textarea id="fancy_textarea_admin_footer">' . esc_textarea($val) . '</textarea><br>';
+		echo '<br><textarea name="admin_header_text" id="fancy_textarea_admin_header">' . esc_textarea($admin_header_text) . '</textarea><br>';
+		echo __('<label>Admin Footer Text</label>', 'wordpress');
+		echo '<br><textarea name="admin_footer_text" id="fancy_textarea_admin_footer">' . esc_textarea($admin_footer_text) . '</textarea><br>';
 		echo __('<label>Front End Header Text</label>', 'wordpress');
-		echo '<br><textarea id="fancy_textarea_frontend_header">' . esc_textarea($val) . '</textarea><br>';
+		echo '<br><textarea name="front_header_text" id="fancy_textarea_frontend_header">' . esc_textarea($front_header_text) . '</textarea><br>';
 		echo __('<label>Front End Footer Text</label>', 'wordpress');
-		echo '<br><textarea id="fancy_textarea_frontend_footer">' . esc_textarea($val) . '</textarea>';
-		$this->write_log($val);
+		echo '<br><textarea name="front_footer_text" id="fancy_textarea_frontend_footer">' . esc_textarea($front_footer_text) . '</textarea>';
 	}
 
 	/**
