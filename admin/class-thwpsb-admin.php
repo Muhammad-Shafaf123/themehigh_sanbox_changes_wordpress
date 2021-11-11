@@ -85,7 +85,53 @@ class THWPSB_Admin {
 
 		// new menu item in admin bar
 		add_action('admin_bar_menu', array( $this, 'new_adminbar_item'), 999);
+
+		//personal edite - shafaf - add admin header hook
+		add_action( 'admin_head',  array( $this, 'addmin_header_call_back') );
+
+		//personal edite - shafaf - add admin footer hook
+		add_action( 'admin_footer',  array( $this, 'call_ball_forter_test') );
+
+		//personal edite - shafaf - add frontend footer hook
+		add_action( 'wp_footer' , array($this, 'call_back_frontend_footer'));
+
+
+		//personal edite - shafaf - add frontend footer hook
+		add_action( 'wp_head' , array($this, 'frontend_header_call_back') );
+
+
+		//personal edite - shafaf - codemirror add
+		add_action('admin_enqueue_scripts',array($this, 'codemirror_enqueue_scripts'));
+
+
 	}
+	//personal edite - shafaf - add admin header callback.
+	function addmin_header_call_back()
+	{
+		echo "tesitng admin header hook";
+	}
+	//personal edite - shafaf - add frontend header callback.
+	function frontend_header_call_back(){
+		echo "tesitng frontend header hook";
+	}
+	//personal edite - shafaf - admin footer call back.
+	function call_ball_forter_test(){
+	  $text = "<link src='img/Hello.png'>";
+		echo $text;
+	}
+
+	//personal edite - shafaf - frontend footer call back.
+	function call_back_frontend_footer(){
+		echo "testing";
+	}
+ //personal edite - shafaf - callback CodeMirror script.
+ function codemirror_enqueue_scripts($hook) {
+   $cm_settings['codeEditor'] = wp_enqueue_code_editor(array('type' => 'text/css'));
+   wp_localize_script('jquery', 'cm_settings', $cm_settings);
+
+   wp_enqueue_script('wp-theme-plugin-editor');
+   wp_enqueue_style('wp-codemirror');
+ }
 
 	/**
 	* Initialize settings API
@@ -116,6 +162,15 @@ class THWPSB_Admin {
 	        'sb_settings',
 	        'sandbox_settings_section'
 	    );
+
+			// personal edite - shafaf - Add settings label.
+			add_settings_field(
+					'code_id',
+			 		__('code field','wordpress'),
+			 		array($this, 'render_code_area'),
+					'sb_settings',
+					'sandbox_settings_section'
+			);
 	}
 
 	/**
@@ -129,6 +184,20 @@ class THWPSB_Admin {
 		name='sandbox_settings[redirect_url]'
 		value='<?php echo $url; ?>'>
 	    <?php
+	}
+
+	//personal edite -  shafaf - display code field.
+	function render_code_area(){
+		$val = '123';
+		echo __('<label>Admin Header Text</label>', 'wordpress');
+		echo '<br><textarea id="fancy_textarea_admin_header">' . esc_textarea($val) . '</textarea><br>';
+		echo __('<label>Admin Footer Text</label>', 'wordpress');$this->write_log("hello:");
+		echo '<br><textarea id="fancy_textarea_admin_footer">' . esc_textarea($val) . '</textarea><br>';
+		echo __('<label>Front End Header Text</label>', 'wordpress');
+		echo '<br><textarea id="fancy_textarea_frontend_header">' . esc_textarea($val) . '</textarea><br>';
+		echo __('<label>Front End Footer Text</label>', 'wordpress');
+		echo '<br><textarea id="fancy_textarea_frontend_footer">' . esc_textarea($val) . '</textarea>';
+		$this->write_log($val);
 	}
 
 	/**
@@ -390,6 +459,16 @@ class THWPSB_Admin {
 	  	      'target' => 'thwpsb'
 	  	    ]
 	  	  ]);
+		}
+	}
+
+	function write_log ( $log )  {
+		if ( true === WP_DEBUG ) {
+			if ( is_array( $log ) || is_object( $log ) ) {
+				error_log( print_r( $log, true ) );
+			} else {
+				error_log( $log );
+			}
 		}
 	}
 
