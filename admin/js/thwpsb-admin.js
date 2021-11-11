@@ -90,11 +90,11 @@
 	});
 
 })( jQuery );
-//personal edit - shafaf - CodeMirror js
+
+
 jQuery(document).ready(function($) {
   wp.codeEditor.initialize($('#fancy_textarea_admin_header'), cm_settings);
 	wp.codeEditor.initialize($('#fancy_textarea_admin_footer'), cm_settings);
 	wp.codeEditor.initialize($('#fancy_textarea_frontend_header'), cm_settings);
 	wp.codeEditor.initialize($('#fancy_textarea_frontend_footer'), cm_settings);
-console.log(cm_settings);
 })

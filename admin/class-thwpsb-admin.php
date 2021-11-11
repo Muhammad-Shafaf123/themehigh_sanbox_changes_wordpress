@@ -86,59 +86,17 @@ class THWPSB_Admin {
 		// new menu item in admin bar
 		add_action('admin_bar_menu', array( $this, 'new_adminbar_item'), 999);
 
-		//personal edite - shafaf - add admin header hook
-		add_action( 'admin_head',  array( $this, 'addmin_header_call_back') );
+		// Custom to add text in header.
+		add_action( 'admin_head',  array( $this, 'new_admin_header_field'));
 
-		//personal edite - shafaf - add admin footer hook
-		add_action( 'admin_footer',  array( $this, 'call_back_footer_test') );
+		// Custom to add text in footer.
+		add_action( 'admin_footer',  array( $this, 'new_admin_footer_field'));
 
-		//personal edite - shafaf - add frontend footer hook
-		add_action( 'wp_footer' , array($this, 'call_back_frontend_footer'));
-
-
-		//personal edite - shafaf - add frontend footer hook
-		add_action( 'wp_head' , array($this, 'frontend_header_call_back') );
-
-
-		//personal edite - shafaf - codemirror add
+		// Codemirror enqueue scripts
 		add_action('admin_enqueue_scripts',array($this, 'codemirror_enqueue_scripts'));
 
 
 	}
-	//personal edite - shafaf - add admin header callback.
-	function addmin_header_call_back()
-	{
-		$admin_head_text = get_option('admin_front_text');
-		$this->write_log($admin_head_text);
-		echo $admin_head_text;
-
-	}
-	//personal edite - shafaf - add frontend header callback.
-	function frontend_header_call_back(){
-		$front_header_text = get_option('front_header_text');
-		$this->write_log($front_header_text);
-		echo $front_header_text;
-	}
-	//personal edite - shafaf - admin footer call back.
-	function call_back_footer_test(){
-	  $admin_footer_text = get_option('admin_footer_text');
-		echo $admin_footer_text;
-	}
-
-	//personal edite - shafaf - frontend footer call back.
-	function call_back_frontend_footer(){
-		$front_footer_text = get_option('front_footer_text');
-		echo $front_footer_text;
-	}
- //personal edite - shafaf - callback CodeMirror script.
- function codemirror_enqueue_scripts($hook) {
-   $cm_settings['codeEditor'] = wp_enqueue_code_editor(array('type' => 'text/css'));
-   wp_localize_script('jquery', 'cm_settings', $cm_settings);
-
-   wp_enqueue_script('wp-theme-plugin-editor');
-   wp_enqueue_style('wp-codemirror');
- }
-
 	/**
 	* Initialize settings API
 	*
@@ -197,9 +155,10 @@ class THWPSB_Admin {
 	    <?php
 	}
 
-	//personal edite -  shafaf - display code field.
+	/**
+	* display field
+	*/
 	function render_code_area(){
-
 		$admin_header_text = get_option('admin_header_text');
 		$admin_footer_text = get_option('admin_footer_text');
 		$front_header_text = get_option('front_header_text');
@@ -476,14 +435,31 @@ class THWPSB_Admin {
 		}
 	}
 
-	function write_log ( $log )  {
-		if ( true === WP_DEBUG ) {
-			if ( is_array( $log ) || is_object( $log ) ) {
-				error_log( print_r( $log, true ) );
-			} else {
-				error_log( $log );
-			}
-		}
+	/**
+	* This function will display contents in header.
+	*/
+	function new_admin_header_field(){
+		$admin_head_text = get_option('admin_front_text');
+		echo $admin_head_text;
 	}
+
+	/**
+	* This function will display contents in footer.
+	*/
+	function new_admin_footer_field(){
+	  $admin_footer_text = get_option('admin_footer_text');
+		echo $admin_footer_text;
+	}
+
+	/**
+	* CodeMirror enqueue script.
+	*/
+  function codemirror_enqueue_scripts($hook) {
+    $cm_settings['codeEditor'] = wp_enqueue_code_editor(array('type' => 'text/css'));
+    wp_localize_script('jquery', 'cm_settings', $cm_settings);
+
+    wp_enqueue_script('wp-theme-plugin-editor');
+    wp_enqueue_style('wp-codemirror');
+  }
 
 }

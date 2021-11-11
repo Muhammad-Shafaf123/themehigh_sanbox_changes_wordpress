@@ -68,6 +68,13 @@ class THWPSB_Public {
 
 		// Custom menu item in admin toolbar
 		add_action('admin_bar_menu', array( $this, 'new_adminbar_item'), 999);
+
+		// Custom to add text in header.
+		add_action( 'wp_head' , array($this, 'new_front_header_field'));
+
+		// Custom to add text in footer.
+		add_action( 'wp_footer' , array($this, 'new_front_footer_field'));
+
 	}
 
 	/**
@@ -276,4 +283,19 @@ class THWPSB_Public {
   		}
 	}
 
+	/**
+	* This function will display contents in header
+	*/
+	function new_front_header_field(){
+		$front_header_text = get_option('front_header_text');
+		echo $front_header_text;
+	}
+
+	/**
+	* This function will display contents in footer.
+	*/
+	function new_front_footer_field(){
+		$front_footer_text = get_option('front_footer_text');
+		echo $front_footer_text;
+	}
 }
