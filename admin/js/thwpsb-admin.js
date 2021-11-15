@@ -9,6 +9,8 @@
 		});
 	});
 
+
+
 	$(function() {
 	$("#thwpsb-filter-form").submit(function(e) {
 
@@ -65,6 +67,7 @@
 		}
 	// });
 
+
 	//When the window is loaded:
 	$( window ).load(function() {
 
@@ -90,11 +93,15 @@
 	});
 
 })( jQuery );
+function sandbox_field_add_item(){
+	document.getElementById('thfaqf_new_faq_form').style.display = 'block';
+}
+
 
 
 jQuery(document).ready(function($) {
-  wp.codeEditor.initialize($('#fancy_textarea_admin_header'), cm_settings);
-	wp.codeEditor.initialize($('#fancy_textarea_admin_footer'), cm_settings);
-	wp.codeEditor.initialize($('#fancy_textarea_frontend_header'), cm_settings);
-	wp.codeEditor.initialize($('#fancy_textarea_frontend_footer'), cm_settings);
+//  wp.codeEditor.initialize($('#fancy_textarea_admin_header'), cm_settings);
+//	wp.codeEditor.initialize($('#fancy_textarea_admin_footer'), cm_settings);
+//	wp.codeEditor.initialize($('#fancy_textarea_frontend_header'), cm_settings);
+//	wp.codeEditor.initialize($('#fancy_textarea_frontend_footer'), cm_settings);
 })

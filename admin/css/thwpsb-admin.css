@@ -30,3 +30,34 @@
 .CodeMirror {
   background: #c11111;
 }
+.sandbox-show-field{
+    background-color: #e5e5e7;
+    padding: 5px;
+    height: 41px;
+    margin-bottom: 4px;
+    border: 1px solid: #dae6ed;
+    position: relative;
+    margin-top: 4px;
+}
+.sandbox-field-plus-button{
+    position: absolute;
+    top: 8px;
+    width: 52px;
+    height: 26px;
+    padding-top: 7px;
+    cursor: pointer;
+    color: gray;
+    background: #fafafa;
+    border: 1px solid #ccc;
+    border-radius: 3px 0px 0px 3px;
+    right: 34px;
+}
+.sandbox-select-option{
+    float: left;
+    width: 100%;
+}
+.show-clone-checkbox{
+    float: left;
+    padding: 12px 0px 12px 0px;
+}
+}

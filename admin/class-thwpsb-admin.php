@@ -159,7 +159,8 @@ class THWPSB_Admin {
 	* display field
 	*/
 	function render_code_area(){
-		$admin_header_text = get_option('admin_header_text');
+	/*
+
 		$admin_footer_text = get_option('admin_footer_text');
 		$front_header_text = get_option('front_header_text');
 		$front_footer_text = get_option('front_footer_text');
@@ -171,8 +172,66 @@ class THWPSB_Admin {
 		echo '<br><textarea name="front_header_text" id="fancy_textarea_frontend_header">' . esc_textarea($front_header_text) . '</textarea><br>';
 		echo __('<label>Front End Footer Text</label>', 'wordpress');
 		echo '<br><textarea name="front_footer_text" id="fancy_textarea_frontend_footer">' . esc_textarea($front_footer_text) . '</textarea>';
-	}
 
+
+
+	*/
+	$admin_header_text = get_option('admin_header_text');
+	?>
+	<div class="sandbox-show-field">
+		<span  class="sandbox-field-plus-button dashicons dashicons-plus" onclick="sandbox_field_add_item()"></span>
+	</div>
+
+	<div id="thfaqf_faq_form" class="thfaqf_faq_form">
+                <?php echo $this->textarea_markup(); ?>
+            </div>
+
+            <div id="thfaqf_new_faq_form" style="display:none;">
+                <?php
+                    $new_faq_form = $this->textarea_markup();
+                    echo $new_faq_form;
+                ?>
+            </div>
+
+
+	<?php
+	}
+ function textarea_markup(){
+	 ?>
+	 <div id="show_item"><?php
+ 	//	echo '<br><textarea name="admin_header_text" class="fancy_textarea_admin_header" id="textarea_admin_header">' . esc_textarea($admin_header_text) . '</textarea><br>'; ?>
+ 	<div class="sandbox-textarea-field">
+ 		<textarea style="float: left;" name="name" rows="8" cols="80"></textarea>
+ 	</div><!--
+ 	<div class="sandbox-select-option">
+ 		<label for="code show in">Code Show In :</label><br>
+ 		<select  name="">
+ 			<option value="Header and Footer">Header and Footer</option>
+ 			<option value="Header">Header Only</option>
+ 			<option value="Footer">Footer Only</option>
+ 		</select>
+ 	</div>
+ 	<div class="show-clone-checkbox">
+ 		<label for="Show In Clone Site :">Show In Clone Site :</label>
+ 		<label for="Yes"> Yes</label>
+ 		<input type="radio" name="yes" value="checked">
+ 		<label for="No"> No</label>
+ 		<input type="radio" name="yes" value="checked1">
+ 	</div>
+ 	<div class="sandbox-select-option">
+ 		<label for="code show in">select sanboxes</label><br>
+ 		<select  name="">
+ 			<option value="Sandbox One">Sandbox One</option>
+ 			<option value="Sandbox One">Sandbox One</option>
+ 			<option value="Sandbox One">Sandbox One</option>
+ 			<option value="Sandbox One">Sandbox One</option>
+
+ 		</select>
+ 	</div>
+ -->
+ 	</div>
+	 <?php
+ }
 	/**
 	* Render checkbox field in settings API
 	*/
@@ -217,7 +276,6 @@ class THWPSB_Admin {
 	public function enqueue_styles() {
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/thwpsb-admin.css', array(), $this->version, 'all' );
-
 	}
 
 	/**

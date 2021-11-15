@@ -13,7 +13,7 @@
  * @package           THWPSB
  *
  * @wordpress-plugin
- * Plugin Name:       ThemeHigh WP Sandbox
+ * Plugin Name:       ThemeHigh WP Sandbox Edited
  * Plugin URI:        themehigh.com
  * Description:       Generate sandboxes.
  * Version:           1.0.0
