@@ -178,46 +178,50 @@ class THWPSB_Admin {
 	*/
 	$admin_header_text = get_option('admin_header_text');
 	?>
-	<div class="sandbox-show-field">
-		<span  class="sandbox-field-plus-button dashicons dashicons-plus" onclick="sandbox_field_add_item()"></span>
-	</div>
 
-	<div id="thfaqf_faq_form" class="thfaqf_faq_form">
-                <?php echo $this->textarea_markup(); ?>
-            </div>
+		<div id="sandbox_textarea_form" class="thfaqf_faq_form">
+        <?php
+					$sandbox_form_html = $this->get_textarea_markup();
+					echo $sandbox_form_html;
+				?>
+  	</div>
 
-            <div id="thfaqf_new_faq_form" style="display:none;">
+            <div id="sandbox_new_textarea_form" style="display:none;">
                 <?php
-                    $new_faq_form = $this->textarea_markup();
-                    echo $new_faq_form;
+                    $new_textarea_form = $this->get_textarea_markup();
+                    echo $new_textarea_form;
                 ?>
             </div>
 
+						<div class="sandbox-show-field-add">
+							<span  class="sandbox-field-plus-button dashicons dashicons-plus" onclick="sandbox_field_add_item()"></span>
+						</div>
 
 	<?php
 	}
- function textarea_markup(){
+ function get_textarea_markup(){
 	 ?>
-	 <div id="show_item"><?php
- 	//	echo '<br><textarea name="admin_header_text" class="fancy_textarea_admin_header" id="textarea_admin_header">' . esc_textarea($admin_header_text) . '</textarea><br>'; ?>
+	 <div class="sandbox-single-textarea-form textarea-active">
+
+		 <div class="sandbox-sangle-textarea-header">
+			 <div class="sandbox-show-field">
+				 <span  class="sandbox-field-plus-button dashicons dashicons-plus" onclick="sandbox_field_add_item()"></span>
+				 <span  class="sandbox-field-plus-button dashicons dashicons-arrow-down" onclick="sanbox_field_edit_item(this)"></span>
+			 </div>
+		 </div>
  	<div class="sandbox-textarea-field">
- 		<textarea style="float: left;" name="name" rows="8" cols="80"></textarea>
- 	</div><!--
- 	<div class="sandbox-select-option">
- 		<label for="code show in">Code Show In :</label><br>
- 		<select  name="">
- 			<option value="Header and Footer">Header and Footer</option>
- 			<option value="Header">Header Only</option>
- 			<option value="Footer">Footer Only</option>
- 		</select>
- 	</div>
- 	<div class="show-clone-checkbox">
- 		<label for="Show In Clone Site :">Show In Clone Site :</label>
- 		<label for="Yes"> Yes</label>
- 		<input type="radio" name="yes" value="checked">
- 		<label for="No"> No</label>
- 		<input type="radio" name="yes" value="checked1">
- 	</div>
+			<input type="text" name="" value="">
+ 		<!--<textarea style="float: left;"  rows="8" cols="80"></textarea>-->
+		<div class="">
+			<h1 class="hello">hello</h1>
+			<p>What is Lorem Ipsum?
+				Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+				has been the industry's standard dummy text ever since the 1500s, when an unknown printer
+				 took a galley of type and scrambled it to make a type specimen book. It has survived not
+				  only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+		</div>
+
+
  	<div class="sandbox-select-option">
  		<label for="code show in">select sanboxes</label><br>
  		<select  name="">
@@ -228,7 +232,8 @@ class THWPSB_Admin {
 
  		</select>
  	</div>
- -->
+
+ 	</div>
  	</div>
 	 <?php
  }

@@ -1,5 +1,7 @@
-(function( $ ) {
+var sanboxe_settings = (function( $, window, document ) {
 	'use strict';
+
+
 
 	// Wwhen the DOM is ready:
 	$(function() {
@@ -36,7 +38,23 @@
          });
 	});
 	});
+	function add_field_item(){
+		console.log('jQuery function worked');
+		var wrapper = $("#sandbox_textarea_form");
+		var sandbox_items = wrapper.find('.sandbox-single-textarea-form');
+		sandbox_items.removeClass("textarea-active");
+		var index = sandbox_items.length+1;
+		var new_sandbox_items = $('#sandbox_new_textarea_form').html();
+		wrapper.append(new_sandbox_items);
+	}
 
+	function edit_field_item(elm){
+		var sandbox_item = $(elm).closest('.sandbox-single-textarea-form');
+		var other_sandbox_items = sandbox_item.siblings('.sandbox-single-textarea-form');
+
+		other_sandbox_items.removeClass("textarea-active");
+		sandbox_item.toggleClass("textarea-active");
+	}
 	// $(function() {
 
 		function show_chart(filtered_data){
@@ -91,17 +109,29 @@
 		}
 
 	});
+	return{
+		addFieldItem : add_field_item,
+		editFieldItem: edit_field_item,
+	}
 
-})( jQuery );
+}( window.jQuery, window, document ));
+
+
+
+// Plus button function.
 function sandbox_field_add_item(){
-	document.getElementById('thfaqf_new_faq_form').style.display = 'block';
+	sanboxe_settings.addFieldItem();
+}
+function sanbox_field_edit_item(elm){
+	sanboxe_settings.editFieldItem(elm);
 }
 
 
-
+/*
 jQuery(document).ready(function($) {
-//  wp.codeEditor.initialize($('#fancy_textarea_admin_header'), cm_settings);
-//	wp.codeEditor.initialize($('#fancy_textarea_admin_footer'), cm_settings);
-//	wp.codeEditor.initialize($('#fancy_textarea_frontend_header'), cm_settings);
-//	wp.codeEditor.initialize($('#fancy_textarea_frontend_footer'), cm_settings);
+  wp.codeEditor.initialize($('#fancy_textarea_admin_header'), cm_settings);
+	wp.codeEditor.initialize($('#fancy_textarea_admin_footer'), cm_settings);
+	wp.codeEditor.initialize($('#fancy_textarea_frontend_header'), cm_settings);
+	wp.codeEditor.initialize($('#fancy_textarea_frontend_footer'), cm_settings);
 })
+*/

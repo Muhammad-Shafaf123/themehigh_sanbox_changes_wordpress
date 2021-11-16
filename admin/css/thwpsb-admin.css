@@ -52,12 +52,28 @@
     border-radius: 3px 0px 0px 3px;
     right: 34px;
 }
-.sandbox-select-option{
-    float: left;
-    width: 100%;
+
+.sandbox-single-textarea-form.textarea-active.sandbox-sangle-textarea-header{
+    margin-bottom: 0;
 }
-.show-clone-checkbox{
-    float: left;
-    padding: 12px 0px 12px 0px;
+.textarea-active div.sandbox-textarea-field{
+    display: block;
 }
+
+.sandbox-textarea-field{
+    border: 1px solid #dae6ed;
+    padding: 1rem 0.6rem;
+    margin-bottom: 0.2rem;
+    margin-top: -6px;
+    display: none;
+    background-color: #f3f8fb;
+}
+.sandbox-show-field-add{
+    background-color: #dae6ed;
+    padding: 5px;
+    height: 41px;
+    margin-bottom: 4px;
+    border: 1px solid: #dae6ed;
+    position: relative;
+    margin-top: 4px;
 }
